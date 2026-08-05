@@ -1,4 +1,3 @@
-import "./index.css"
 import { Link, Meta, Title } from "@solidjs/meta"
 import { ProviderIcon } from "@opencode-ai/ui/provider-icon"
 import { geoEquirectangular, geoPath } from "d3-geo"
@@ -1411,9 +1410,10 @@ function GeoWorldMap(props: {
   const i18n = useI18n()
   const opacityScale = createMemo(() => scaleSqrt().domain([0, props.maxTokens]).range([0.26, 0.96]).clamp(true))
   const countryOpacity = (country: CountryEntry | undefined) => {
-    if (!country) return 0
+    if (!country || country.tokens <= 0) return 0
     const opacity = opacityScale()(country.tokens)
-    if (!props.activeCountry || props.activeCountry === country.country) return opacity
+    if (props.activeCountry === country.country) return 1
+    if (!props.activeCountry) return opacity
     return Math.max(0.18, opacity * 0.36)
   }
 
